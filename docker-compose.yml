@@ -1,0 +1,104 @@
+version: '2.3'
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=yeye
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=testing
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  memcached:
+    image: memcached:alpine
+    ports:
+      - "11211:11211"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  sentry-web:
+    image: sentry
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    depends_on:
+      - redis
+      - memcached
+      - postgres
+      - sentry-cron
+      - sentry-worker
+    links:
+      - postgres
+      - redis
+      - memcached
+    environment:
+      SENTRY_REDIS_HOST: redis
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_SECRET_KEY: "123"
+      SENTRY_DISABLE_REGISTRATION: "true"
+      SENTRY_DB_USER: "yeye"
+      SENTRY_DB_PASSWORD: "mysecretpassword"
+
+  sentry-cron:
+    image: sentry
+    command: "sentry run cron"
+    depends_on:
+        - redis
+        - postgres
+        - memcached
+    links:
+        - postgres
+        - redis
+        - memcached
+    environment:
+      SENTRY_REDIS_HOST: redis
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_SECRET_KEY: "123"
+      SENTRY_DISABLE_REGISTRATION: "true"
+      SENTRY_DB_USER: "yeye"
+      SENTRY_DB_PASSWORD: "mysecretpassword"
+      
+  sentry-worker:
+    image: sentry
+    command: "sentry run worker"
+    depends_on:
+      - redis
+      - postgres
+      - memcached
+    links:
+      - postgres
+      - redis
+      - memcached
+    environment: 
+      SENTRY_REDIS_HOST: redis
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_SECRET_KEY: "123"
+      SENTRY_DISABLE_REGISTRATION: "true"
+      SENTRY_DB_USER: "yeye"
+      SENTRY_DB_PASSWORD: "mysecretpassword"
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.4.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment: 
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ES_HEAP_SIZE: "1g"
+    volumes:
+      - ./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.4.0
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./docker/kibana/:/usr/share/kibana/config:ro
+volumes:
+  postgres_data: {}

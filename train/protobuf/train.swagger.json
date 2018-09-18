@@ -1,0 +1,69 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "train.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/train": {
+      "post": {
+        "operationId": "CreateTrain",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CreateTrainResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Train"
+            }
+          }
+        ],
+        "tags": [
+          "TrainService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CreateTrainResponse": {
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string"
+        }
+      }
+    },
+    "Train": {
+      "type": "object",
+      "properties": {
+        "brandname": {
+          "type": "string"
+        },
+        "brandlogo": {
+          "type": "string"
+        },
+        "brandfeatures": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service EmailService {
+        rpc SendEmailVerification(Email) returns (EmailResponse) {}
+}
+
+message Email {
+        string to = 1;
+        string verificationid = 2;
+        string passwordresetid = 3;
+}
+
+message EmailResponse {
+        string msg = 1;
+}

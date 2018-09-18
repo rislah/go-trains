@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+service TrainService {
+        rpc CreateTrain(Train) returns (CreateTrainResponse) {
+        option (google.api.http) = {
+               post: "/api/v1/train"
+               body: "*"
+};
+};
+};
+
+message Train {
+        string brandname = 1;
+        string brandlogo = 2;
+        string brandfeatures = 3;
+}
+
+message CreateTrainResponse {
+        string msg = 1;
+}
