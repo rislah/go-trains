@@ -15,6 +15,32 @@
     "application/json"
   ],
   "paths": {
+    "/api/v1/route": {
+      "post": {
+        "operationId": "CreateRoute",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CreateRouteResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Route"
+            }
+          }
+        ],
+        "tags": [
+          "TrainService"
+        ]
+      }
+    },
     "/api/v1/train": {
       "post": {
         "operationId": "CreateTrain",
@@ -40,13 +66,71 @@
           "TrainService"
         ]
       }
+    },
+    "/api/v1/trains": {
+      "get": {
+        "operationId": "GetTrains",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetTrainsResponse"
+            }
+          }
+        },
+        "tags": [
+          "TrainService"
+        ]
+      }
     }
   },
   "definitions": {
+    "CreateRouteResponse": {
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string"
+        }
+      }
+    },
     "CreateTrainResponse": {
       "type": "object",
       "properties": {
         "msg": {
+          "type": "string"
+        }
+      }
+    },
+    "GetTrainsResponse": {
+      "type": "object",
+      "properties": {
+        "trains": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Train"
+          }
+        }
+      }
+    },
+    "Route": {
+      "type": "object",
+      "properties": {
+        "brandname": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
           "type": "string"
         }
       }

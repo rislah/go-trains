@@ -10,7 +10,7 @@ type (
 	userStore interface {
 		findUserByEmail(string) (pb.User, bool, error)
 		findUserByUsername(string) (pb.User, bool, error)
-		createUser(*pb.User) error
+		createUser(*pb.User, string) error
 	}
 
 	store struct {
@@ -36,7 +36,7 @@ func (s store) findUserByEmail(email string) (pb.User, bool, error) {
 
 func (s store) findUserByUsername(uname string) (pb.User, bool, error) {
 	var u pb.User
-	err := s.QueryRow("SELECT username, password, role FROM users WHERE username = $1", uname).Scan(&u.Username, &u.Password, &u.Role)
+	err := s.QueryRow("SELECT username, password, verified, role FROM users WHERE username = $1", uname).Scan(&u.Username, &u.Password, &u.Verified, &u.Role)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return u, false, nil
@@ -46,19 +46,19 @@ func (s store) findUserByUsername(uname string) (pb.User, bool, error) {
 	return u, true, nil
 }
 
-func (s store) createUser(u *pb.User) error {
+func (s store) createUser(u *pb.User, vid string) error {
 	tx, err := s.Begin()
 	if err != nil {
 		return err
 	}
 
-	stmt, err := tx.Prepare("INSERT INTO users (username, firstname, lastname, email, password) VALUES ($1, $2, $3, $4, $5)")
+	stmt, err := tx.Prepare("INSERT INTO users (username, firstname, lastname, email, password, verificationid) VALUES ($1, $2, $3, $4, $5, $6)")
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	_, err = stmt.Exec(u.Username, u.Firstname, u.Lastname, u.Email, u.Password)
+	_, err = stmt.Exec(u.Username, u.Firstname, u.Lastname, u.Email, u.Password, vid)
 	if err != nil {
 		tx.Rollback()
 		return err

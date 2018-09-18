@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -69,14 +68,14 @@ func extractJWT(ctx context.Context) (string, error) {
 	}
 
 	splits := strings.SplitN(val, " ", 2)
-	fmt.Println(len(splits))
 	if len(splits) < 2 {
 		return "", status.Errorf(codes.Unauthenticated, "bad authorization token schema")
 	}
 
-	// if strings.ToLower(splits[0]) != "Authorization" {
-	// 	return "", status.Errorf(codes.Unauthenticated, "bad authorization token schema")
-	// }
+	if strings.ToLower(splits[0]) != "bearer" {
+		return "", status.Errorf(codes.Unauthenticated, "bad authorization token schema")
+	}
+
 	return splits[1], nil
 }
 
@@ -120,4 +119,19 @@ func Middleware(methods ...string) grpc.UnaryServerInterceptor {
 
 		return handler(newCtx, req)
 	}
+}
+
+func CheckRole(ctx context.Context, roles ...string) error {
+	claims, err := GetJWTClaims(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, role := range roles {
+		if role == claims.Role {
+			return status.Errorf(codes.Unauthenticated, "you are not privileged to do that")
+		}
+	}
+
+	return nil
 }

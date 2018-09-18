@@ -105,6 +105,13 @@
         },
         "role": {
           "type": "string"
+        },
+        "verificationid": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean",
+          "format": "boolean"
         }
       }
     }

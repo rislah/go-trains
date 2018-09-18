@@ -73,6 +73,8 @@ func main() {
 	// requires full protobuf method name
 	server := grpc.NewServer(grpc.UnaryInterceptor(auth.Middleware([]string{
 		"/train.TrainService/CreateTrain",
+		"/train.TrainService/CreateRoute",
+		"/train.TrainService/GetTrains",
 	}...)))
 
 	var logsvc logger.Log

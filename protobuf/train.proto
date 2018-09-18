@@ -3,20 +3,51 @@ syntax = "proto3";
 import "google/api/annotations.proto";
 
 service TrainService {
-        rpc CreateTrain(Train) returns (CreateTrainResponse) {
-        option (google.api.http) = {
-               post: "/api/v1/train"
-               body: "*"
+  rpc CreateTrain(Train) returns (CreateTrainResponse) {
+    option (google.api.http) = {
+                                post: "/api/v1/train"
+                                body: "*"
+    };
+  };
+  rpc CreateRoute(Route) returns (CreateRouteResponse) {
+    option (google.api.http) = {
+                                post: "/api/v1/route"
+                                body: "*"
+    };
+  };
+
+  rpc GetTrains(Empty) returns (GetTrainsResponse) {
+    option (google.api.http) = {
+                                get: "/api/v1/trains"
+    };
+  };
 };
-};
+
+message Route {
+  string brandname = 1;
+  string from = 2;
+  string to = 3;
+  string price = 4;
+  string date = 5;
+  string time = 6;
 };
 
 message Train {
-        string brandname = 1;
-        string brandlogo = 2;
-        string brandfeatures = 3;
-}
+  string brandname = 1;
+  string brandlogo = 2;
+  string brandfeatures = 3;
+};
+
+message GetTrainsResponse {
+  repeated Train trains = 1;
+};
+
+message Empty {};
 
 message CreateTrainResponse {
-        string msg = 1;
-}
+  string msg = 1;
+};
+
+message CreateRouteResponse {
+  string msg = 1;
+};

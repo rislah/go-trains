@@ -3,33 +3,35 @@ syntax = "proto3";
 import "google/api/annotations.proto";
 
 service UserService {
-        rpc CreateUser(User) returns (CreateUserResponse) {
-        option (google.api.http) = {
-        post: "/api/v1/register"
-        body: "*"
-};
-};
-    rpc Login(User) returns (LoginResponse) {
+  rpc CreateUser(User) returns (CreateUserResponse) {
     option (google.api.http) = {
-    post: "/api/v1/login"
-    body: "*"
-};
-};
+                                post: "/api/v1/register"
+                                body: "*"
+    };
+  };
+  rpc Login(User) returns (LoginResponse) {
+    option (google.api.http) = {
+                                post: "/api/v1/login"
+                                body: "*"
+    };
+  };
 };
 
 message User {
-        string username = 1;
-        string firstname = 2;
-        string lastname = 3;
-        string email = 4;
-        string password = 5;
-        string role = 6;
+  string username = 1;
+  string firstname = 2;
+  string lastname = 3;
+  string email = 4;
+  string password = 5;
+  string role = 6;
+  string verificationid = 7;
+  bool verified = 8;
 }
 
 message CreateUserResponse {
-        string msg = 1;
+  string msg = 1;
 }
 
 message LoginResponse {
-        string token = 1;
+  string token = 1;
 }

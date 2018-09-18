@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS users (
        email VARCHAR(255) NOT NULL DEFAULT '',
        role VARCHAR(255) NOT NULL DEFAULT 'customer',
        uuid uuid NOT NULL DEFAULT uuid_generate_v4(),
+       verificationid VARCHAR(255) NOT NULL DEFAULT '',
+       verified boolean NOT NULL DEFAULT false,
        CONSTRAINT username UNIQUE (username),
        CONSTRAINT email UNIQUE (email)
 );

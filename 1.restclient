@@ -1,14 +1,24 @@
 # create train
 :jwt-customer = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyMSIsInJvbGUiOiJjdXN0b21lciIsImV4cCI6MTUzNzIzOTkyMywiaWF0IjoxNTM3MjE4MzI4fQ.VBsplt5KIsTcsNiCLQRIbgOb8G_9bLK5s6uX_A7we_s
+:jwt-admin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyMSIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTUzNzI2MjAyOCwiaWF0IjoxNTM3MjQwNTU5fQ.cXIaoVvWoczErNgs7b3SFZ35Wsy3mfiKHoyG5CjcQ6g
 
 POST http://127.0.0.1:8080/api/v1/train
-Authorization: Bearer :jwt-customer
+Authorization: Bearer :jwt-admin
 {"brandname": "Tartu Bussikeskus", "brandlogo": "https://www.tpilet.ee/logos/brandlogo/2-43.png", "brandfeatures": "WiFi"}
 
-#register
+#register customer
 POST http://127.0.0.1:8081/api/v1/register
 {"firstname": "fname", "lastname": "lname", "username": "testuser1", "password": "testpass1", "email": "laheristo@gmail.com"}
 
 #login
 POST http://127.0.0.1:8081/api/v1/login
 {"username": "testuser1", "password": "testpass1", "email": "testemail1@gmail.com"}
+
+#create route
+POST http://127.0.0.1:8080/api/v1/route
+Authorization: Bearer :jwt-admin
+{"brandname": "Tartu Bussikeskus", "from": "Tartu", "to": "Tallinn", "price": "3.99", "date": "19-08-2018", "time": "8:15"}
+
+#list trains
+GET http://127.0.0.1:8080/api/v1/trains
+Authorization: Bearer :jwt-admin
