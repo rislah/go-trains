@@ -66,6 +66,22 @@
           "UserService"
         ]
       }
+    },
+    "/api/v1/users": {
+      "get": {
+        "operationId": "GetUsers",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetUsersResponse"
+            }
+          }
+        },
+        "tags": [
+          "UserService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -74,6 +90,17 @@
       "properties": {
         "msg": {
           "type": "string"
+        }
+      }
+    },
+    "GetUsersResponse": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
         }
       }
     },
@@ -112,6 +139,9 @@
         "verified": {
           "type": "boolean",
           "format": "boolean"
+        },
+        "uuid": {
+          "type": "string"
         }
       }
     }

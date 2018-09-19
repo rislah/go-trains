@@ -10,6 +10,7 @@ type (
 	userStore interface {
 		findUserByEmail(string) (pb.User, bool, error)
 		findUserByUsername(string) (pb.User, bool, error)
+		getUsers() ([]*pb.User, error)
 		createUser(*pb.User, string) error
 	}
 
@@ -65,4 +66,32 @@ func (s store) createUser(u *pb.User, vid string) error {
 	}
 
 	return tx.Commit()
+}
+
+func (s store) getUsers() ([]*pb.User, error) {
+	var users []*pb.User
+
+	rows, err := s.Query("SELECT username, firstname, lastname, email, role, uuid FROM users")
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var user pb.User
+		err = rows.Scan(&user.Username, &user.Firstname, &user.Lastname, &user.Email, &user.Role, &user.Uuid)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }

@@ -39,6 +39,46 @@
         "tags": [
           "TrainService"
         ]
+      },
+      "put": {
+        "operationId": "UpdateRoute",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UpdateRouteResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Route"
+            }
+          }
+        ],
+        "tags": [
+          "TrainService"
+        ]
+      }
+    },
+    "/api/v1/routes": {
+      "get": {
+        "operationId": "GetRoutes",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetRoutesResponse"
+            }
+          }
+        },
+        "tags": [
+          "TrainService"
+        ]
       }
     },
     "/api/v1/train": {
@@ -101,6 +141,17 @@
         }
       }
     },
+    "GetRoutesResponse": {
+      "type": "object",
+      "properties": {
+        "routes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Route"
+          }
+        }
+      }
+    },
     "GetTrainsResponse": {
       "type": "object",
       "properties": {
@@ -132,6 +183,12 @@
         },
         "time": {
           "type": "string"
+        },
+        "routeid": {
+          "type": "string"
+        },
+        "lastupdated": {
+          "type": "string"
         }
       }
     },
@@ -145,6 +202,14 @@
           "type": "string"
         },
         "brandfeatures": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateRouteResponse": {
+      "type": "object",
+      "properties": {
+        "msg": {
           "type": "string"
         }
       }

@@ -21,6 +21,19 @@ service TrainService {
                                 get: "/api/v1/trains"
     };
   };
+
+  rpc UpdateRoute(Route) returns (UpdateRouteResponse) {
+    option (google.api.http) = {
+                                put: "/api/v1/route"
+                                body: "*"
+    };
+  };
+
+  rpc GetRoutes(Empty) returns (GetRoutesResponse) {
+    option (google.api.http) = {
+                                get: "/api/v1/routes"
+    };
+  };
 };
 
 message Route {
@@ -30,6 +43,8 @@ message Route {
   string price = 4;
   string date = 5;
   string time = 6;
+  string routeid = 7;
+  string lastupdated = 8;
 };
 
 message Train {
@@ -42,6 +57,10 @@ message GetTrainsResponse {
   repeated Train trains = 1;
 };
 
+message GetRoutesResponse {
+  repeated Route routes = 1;
+};
+
 message Empty {};
 
 message CreateTrainResponse {
@@ -49,5 +68,9 @@ message CreateTrainResponse {
 };
 
 message CreateRouteResponse {
+  string msg = 1;
+};
+
+message UpdateRouteResponse {
   string msg = 1;
 };

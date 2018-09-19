@@ -37,8 +37,7 @@ func EncodeJWT(u pb.User) (string, error) {
 		u.Username,
 		u.Role,
 		jwt.StandardClaims{
-			ExpiresAt: expirationTime,
-			IssuedAt:  time.Now().Unix(),
+			IssuedAt: time.Now().Unix(),
 		},
 	}
 
@@ -100,18 +99,16 @@ func Middleware(methods ...string) grpc.UnaryServerInterceptor {
 
 		for _, method := range methods {
 			if method == info.FullMethod {
-				return ctx, nil
+				newCtx, err = func(ctx context.Context) (context.Context, error) {
+					claims, err := GetJWTClaims(ctx)
+					if err != nil {
+						return nil, err
+					}
+					newCtx = context.WithValue(ctx, JWTClaims, claims)
+					return newCtx, nil
+				}(ctx)
 			}
 		}
-
-		newCtx, err = func(ctx context.Context) (context.Context, error) {
-			claims, err := GetJWTClaims(ctx)
-			if err != nil {
-				return nil, err
-			}
-			newCtx = context.WithValue(ctx, JWTClaims, claims)
-			return newCtx, nil
-		}(ctx)
 
 		if err != nil {
 			return nil, err

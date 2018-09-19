@@ -72,9 +72,10 @@ func main() {
 	// endpoints that should require authentication
 	// requires full protobuf method name
 	server := grpc.NewServer(grpc.UnaryInterceptor(auth.Middleware([]string{
-		"/train.TrainService/CreateTrain",
-		"/train.TrainService/CreateRoute",
-		"/train.TrainService/GetTrains",
+		"/TrainService/CreateTrain",
+		"/TrainService/CreateRoute",
+		"/TrainService/GetTrains",
+		"/TrainService/UpdateRoute",
 	}...)))
 
 	var logsvc logger.Log

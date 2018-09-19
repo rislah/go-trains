@@ -108,3 +108,21 @@ func (s service) Login(ctx context.Context, req *pb.User) (*pb.LoginResponse, er
 
 	return &pb.LoginResponse{Token: token}, nil
 }
+
+func (s service) GetUsers(ctx context.Context, req *pb.Empty) (*pb.GetUsersResponse, error) {
+	err := auth.CheckRole(ctx, []string{"customer"}...)
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := s.store.getUsers()
+	if err != nil {
+		return nil, s.log.InternalError(err, "user")
+	}
+
+	if len(u) <= 0 {
+		return nil, status.Errorf(codes.NotFound, "couldn't find any users")
+	}
+
+	return &pb.GetUsersResponse{Users: u}, nil
+}

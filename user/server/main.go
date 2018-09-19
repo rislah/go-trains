@@ -11,6 +11,7 @@ import (
 
 	"github.com/GoingFast/gotrains/user"
 	pb "github.com/GoingFast/gotrains/user/protobuf"
+	"github.com/GoingFast/gotrains/util/auth"
 	"github.com/GoingFast/gotrains/util/logger"
 	sentry "github.com/getsentry/raven-go"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -69,7 +70,10 @@ func main() {
 		stdlog.Fatalf("elasticsearch: %v", err)
 	}
 
-	server := grpc.NewServer()
+	server := grpc.NewServer(grpc.UnaryInterceptor(auth.Middleware([]string{
+		"/UserService/GetUsers",
+	}...)))
+
 	var logsvc logger.Log
 	{
 		logsvc = logger.NewService(s, db, e)

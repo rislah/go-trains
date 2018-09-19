@@ -15,7 +15,15 @@ service UserService {
                                 body: "*"
     };
   };
+
+  rpc GetUsers(Empty) returns (GetUsersResponse) {
+    option (google.api.http) = {
+                                get: "/api/v1/users"
+    };
+  };
 };
+
+message Empty{}
 
 message User {
   string username = 1;
@@ -26,6 +34,7 @@ message User {
   string role = 6;
   string verificationid = 7;
   bool verified = 8;
+  string uuid = 9;
 }
 
 message CreateUserResponse {
@@ -34,4 +43,8 @@ message CreateUserResponse {
 
 message LoginResponse {
   string token = 1;
+}
+
+message GetUsersResponse {
+  repeated User users = 1;
 }

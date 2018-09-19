@@ -17,6 +17,7 @@ type (
 	auditLog struct {
 		Name      string    `json:"name"`
 		Action    string    `json:"action"`
+		Role      string    `json:"role"`
 		Timestamp time.Time `json:"timestamp"`
 	}
 
@@ -89,6 +90,7 @@ func (s service) AuditLog(ctx context.Context, a string) {
 	al := auditLog{
 		Name:      claims.Username,
 		Action:    a,
+		Role:      claims.Role,
 		Timestamp: time.Now().UTC(),
 	}
 

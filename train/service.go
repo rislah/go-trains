@@ -101,3 +101,50 @@ func (s service) CreateRoute(ctx context.Context, req *pb.Route) (*pb.CreateRout
 
 	return &pb.CreateRouteResponse{Msg: "success"}, nil
 }
+
+func (s service) UpdateRoute(ctx context.Context, req *pb.Route) (*pb.UpdateRouteResponse, error) {
+	err := auth.CheckRole(ctx, []string{"customer"}...)
+	if err != nil {
+		return nil, err
+	}
+
+	ex, err := s.store.routeExists(req.Routeid)
+	if err != nil {
+		s.logrus.Debug(err)
+		return nil, s.log.InternalError(err, "train")
+	}
+
+	if !ex {
+		return nil, status.Errorf(codes.NotFound, "couldn't find any route with the requested id")
+	}
+
+	err = s.store.updateRoute(req)
+	if err != nil {
+		s.logrus.Debug(err)
+		return nil, s.log.InternalError(err, "train")
+	}
+
+	go s.log.AuditLog(ctx, fmt.Sprintf("updated route %s", req.Routeid))
+
+	return &pb.UpdateRouteResponse{Msg: "success"}, nil
+
+}
+
+func (s service) GetRoutes(ctx context.Context, req *pb.Empty) (*pb.GetRoutesResponse, error) {
+	err := auth.CheckRole(ctx, []string{"customer"}...)
+	if err != nil {
+		return nil, err
+	}
+
+	routes, err := s.store.getRoutes()
+	if err != nil {
+		s.logrus.Debug(err)
+		return nil, s.log.InternalError(err, "train")
+	}
+
+	if len(routes) <= 0 {
+		return nil, status.Errorf(codes.NotFound, "couldn't find any routes")
+	}
+
+	return &pb.GetRoutesResponse{Routes: routes}, nil
+}

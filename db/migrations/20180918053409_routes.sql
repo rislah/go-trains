@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS routes (
        routes_to varchar(255) NOT NULL DEFAULT '',
        price varchar(255) NOT NULL DEFAULT '',
        date varchar(255) NOT NULL DEFAULT '',
-       time varchar(255) NOT NULL DEFAULT ''
+       time varchar(255) NOT NULL DEFAULT '',
+       lastupdated VARCHAR(255) DEFAULT '',
+       routeid uuid NOT NULL DEFAULT uuid_generate_v4()
 );
 
 -- +goose Down
